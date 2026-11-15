@@ -40,7 +40,7 @@ function drawVector(img,vec){
 function mouseDragged(){
   vector = makeVector(mouseX,mouseY);
   drawVector(imgA,vector);
-  transformed = makeRotate(vector,45);
+  transformed = makeScale(vector,5,2);
   drawVector(imgB,transformed);
 }
 
@@ -52,7 +52,6 @@ function multiply(vec,matrix){
       out_vec[i] += matrix[i][j]*vec[j]
     }
   }
-  console.log(out_vec[2]);
   return out_vec
 }
 
@@ -64,18 +63,22 @@ function makeTranslate(vec,tx,ty){
 }
 
 function makeScale(vec,sx,sy){
+  let result = makeTranslate(vec,-256,-256);
   let matrix = [[sx,0,0],
             [0,sy,0],
             [0,0,1]]
-  return multiply(vec,matrix)
+  result = multiply(result,matrix)
+  return makeTranslate(result,256,256)
 }
 
 function makeRotate(vec,theta){
+  let result = makeTranslate(vec,-256,-256);
   let radian = (theta/180)*Math.PI
   let matrix = [[Math.cos(radian),-Math.sin(radian),0],
             [Math.sin(radian),Math.cos(radian),0],
             [0,0,1]]
-  return multiply(vec,matrix)
+  result = multiply(result,matrix)
+  return makeTranslate(result,256,256)
 }
 
 function makeShear(vec,shx,shy){
